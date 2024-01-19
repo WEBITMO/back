@@ -5,6 +5,7 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 
 from nnhub.api.image_classification_model.router import router as image_classification_router
+from nnhub.api.image_segmentation_model.router import router as image_segmentation_router
 from nnhub.api.large_language_model.router import router as large_language_model_router
 from nnhub.api.speech_to_text_model.router import router as speech_to_text_model_router
 from nnhub.infrastructure.db import init_db, create_db
@@ -44,6 +45,7 @@ router_v1 = APIRouter(
     prefix='/api/v1'
 )
 router_v1.include_router(image_classification_router)
+router_v1.include_router(image_segmentation_router)
 router_v1.include_router(large_language_model_router)
 router_v1.include_router(speech_to_text_model_router)
 app.include_router(router_v1)
