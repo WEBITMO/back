@@ -1,7 +1,7 @@
-from enum import StrEnum
+from enum import Enum
 
 
-class ModelType(StrEnum):
+class ModelType(str, Enum):
     IMAGE_CLASSIFICATION = 'image_classification_model'
     IMAGE_SEGMENTATION = 'image_segmentation_model'
     LARGE_LANGUAGE = 'large_language_model'

@@ -2,6 +2,7 @@ from aiosqlite import Connection
 from fastapi import APIRouter, Depends, UploadFile, File, HTTPException
 from pydantic import BaseModel
 from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND
+from transformers import pipeline
 
 from nnhub.api.schema.model import Model
 from nnhub.domain.model import get_available_local_models
@@ -26,17 +27,17 @@ async def load_model_locally(
     model: Model,
     db: Connection = Depends(get_db)
 ):
+    global pipe
     available_models = get_available_local_models(model_settings.SPEECH_TO_TEXT)
     if model.name not in available_models:
         return HTTP_404_NOT_FOUND
     await update_model_name(db, model_type=ModelType.SPEECH_TO_TEXT, model_name=model.name)
+    pipe = pipeline("automatic-speech-recognition", model=model_settings.BASE / model_settings.SPEECH_TO_TEXT / model.name)
     return HTTP_201_CREATED
 
 
 class AudioPredictionResult(BaseModel):
-    filename: str
-    filesize: int
-    prediction: str
+    transcribed_text: str
 
 
 @router.post('/predict')
@@ -44,6 +45,7 @@ async def inference_by_audio(
     audio: UploadFile = File(..., media_type='audio/*'),
     db: Connection = Depends(get_db),
 ) -> AudioPredictionResult:
+    global pipe
     if not audio.content_type.startswith("audio/"):
         raise HTTPException(status_code=400, detail="Invalid audio type")
 
@@ -55,19 +57,10 @@ async def inference_by_audio(
         raise HTTPException(status_code=404, detail="Model not found")
     current_model = current_model[0]
 
-    # if current_model == 'mnist':
-    #     classes = 10
-    # elif current_model == 'cifar_100':
-    #     classes = 100
-    # else:
-    #     raise ValueError("Invalid model name")
-
-    prediction = lorem.text()
-
     content = await audio.read()
 
+    prediction = pipe(content).get("text", None)
+
     return AudioPredictionResult(
-        filename=audio.filename,
-        filesize=len(content),
-        prediction=prediction
+        transcribed_text=prediction or lorem.text()
     )
