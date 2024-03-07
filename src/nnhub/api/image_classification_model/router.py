@@ -1,12 +1,11 @@
 import io
 
-import numpy as np
 from PIL import Image
 from aiosqlite import Connection
 from fastapi import APIRouter, Depends, UploadFile, File, HTTPException
 from pydantic import BaseModel
 from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND
-from transformers import AutoImageProcessor, ResNetForImageClassification, pipeline, Pipeline, PretrainedConfig
+from transformers import pipeline, Pipeline
 
 from nnhub.api.schema.model import Model
 from nnhub.domain.model import get_available_local_models

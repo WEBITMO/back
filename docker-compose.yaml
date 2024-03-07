@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  nnhub-backend:
+    build:
+      context: .
+      dockerfile: src/nnhub/Dockerfile
+    env_file:
+      - config/config.env
+    environment:
+      DB_SETTINGS_PATH: /opt/app-root/data/db.sqlite
+      MODEL_SETTINGS_PATH_BASE: /opt/app-root/models
+      REDIS_URL: "redis://:redis_password@redis:6379/0"
+    restart: unless-stopped
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./src:/opt/app-root/src:rw
+      - ./data:/opt/app-root/data:rw
+      - ./models:/opt/app-root/models:rw
+
+  redis:
+    image: redis:latest
+    command: redis-server --requirepass redis_password
+    ports:
+      - "6379:6379"
