@@ -9,7 +9,6 @@ from pydantic import BaseModel
 from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND, HTTP_200_OK
 from transformers import pipeline, Pipeline
 
-from nnhub.infrastructure.db import get_db
 from nnhub.infrastructure.model_settings import model_settings
 from nnhub.infrastructure.redis import get_redis
 
@@ -69,7 +68,6 @@ class ImageSegmentationResults(BaseModel):
 @router.post('/predict')
 async def inference_by_image(
     image: UploadFile = File(..., media_type='image/*'),
-    db: Connection = Depends(get_db),
 ) -> ImageSegmentationResults:
     global pipe
     if not image.content_type.startswith("image/"):

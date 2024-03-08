@@ -1,0 +1,247 @@
+{
+  "models": [
+    {
+      "id": "nvidia/Smaug-72B",
+      "pipeline_tag": "text-generation",
+      "available": true,
+      "author": "nvidia",
+      "lastModified": "2024-03-03T15:27:12.000Z",
+      "downloads": 2,
+      "likes": 2,
+      "authorData": {
+        "avatarUrl": "https://images.ngc.nvidia.com/public-images/models/llm.jpg",
+        "fullname": "NVIDIA",
+        "name": "nvidia",
+        "type": "org"
+      }
+    },
+    {
+      "id": "nvidia/Phi-2B",
+      "pipeline_tag": "text-generation",
+      "available": true,
+      "author": "nvidia",
+      "lastModified": "2024-02-27T15:27:12.000Z",
+      "downloads": 3,
+      "likes": 3,
+      "authorData": {
+        "avatarUrl": "https://images.ngc.nvidia.com/public-images/models/ngc-visual-ai-foundation-phi-2-sans-logoai-ran-news-p@2x.jpg",
+        "fullname": "NVIDIA",
+        "name": "nvidia",
+        "type": "org"
+      }
+    },
+    {
+      "id": "nvidia/Gemma-2B",
+      "pipeline_tag": "text-generation",
+      "available": true,
+      "author": "nvidia",
+      "lastModified": "2024-02-21T15:27:12.000Z",
+      "downloads": 4,
+      "likes": 4,
+      "authorData": {
+        "avatarUrl": "https://images.ngc.nvidia.com/public-images/models/gemma.jpg",
+        "fullname": "NVIDIA",
+        "name": "nvidia",
+        "type": "org"
+      }
+    },
+    {
+      "id": "nvidia/Gemma-7B",
+      "pipeline_tag": "text-generation",
+      "available": true,
+      "author": "nvidia",
+      "lastModified": "2024-02-21T15:27:12.000Z",
+      "downloads": 5,
+      "likes": 5,
+      "authorData": {
+        "avatarUrl": "https://images.ngc.nvidia.com/public-images/models/gemma.jpg",
+        "fullname": "NVIDIA",
+        "name": "nvidia",
+        "type": "org"
+      }
+    },
+    {
+      "id": "nvidia/Mamba-Chat",
+      "pipeline_tag": "text-generation",
+      "available": true,
+      "author": "nvidia",
+      "lastModified": "2024-02-12T15:27:12.000Z",
+      "downloads": 6,
+      "likes": 6,
+      "authorData": {
+        "avatarUrl": "https://images.ngc.nvidia.com/public-images/mamba-chat.jpg",
+        "fullname": "NVIDIA",
+        "name": "nvidia",
+        "type": "org"
+      }
+    },
+    {
+      "id": "nvidia/Code-Llama-70B",
+      "pipeline_tag": "text-generation",
+      "available": true,
+      "author": "nvidia",
+      "lastModified": "2024-01-30T15:27:12.000Z",
+      "downloads": 7,
+      "likes": 7,
+      "authorData": {
+        "avatarUrl": "https://catalog.ngc.nvidia.com/demos/llama2.jpg",
+        "fullname": "NVIDIA",
+        "name": "nvidia",
+        "type": "org"
+      }
+    },
+    {
+      "id": "nvidia/NV-Llama2-70B-RLHF-Chat",
+      "pipeline_tag": "text-generation",
+      "available": true,
+      "author": "nvidia",
+      "lastModified": "2023-12-24T15:27:12.000Z",
+      "downloads": 8,
+      "likes": 8,
+      "authorData": {
+        "avatarUrl": "https://catalog.ngc.nvidia.com/demos/steerllm.jpg",
+        "fullname": "NVIDIA",
+        "name": "nvidia",
+        "type": "org"
+      }
+    },
+    {
+      "id": "nvidia/NV-Llama2-70B-SteerLM-Chat",
+      "pipeline_tag": "text-generation",
+      "available": true,
+      "author": "nvidia",
+      "lastModified": "2023-12-24T15:27:12.000Z",
+      "downloads": 9,
+      "likes": 9,
+      "authorData": {
+        "avatarUrl": "https://catalog.ngc.nvidia.com/demos/steerllm.jpg",
+        "fullname": "NVIDIA",
+        "name": "nvidia",
+        "type": "org"
+      }
+    },
+    {
+      "id": "nvidia/Mixtral-8x7B-Instruct",
+      "pipeline_tag": "text-generation",
+      "available": true,
+      "author": "nvidia",
+      "lastModified": "2023-12-13T15:27:12.000Z",
+      "downloads": 10,
+      "likes": 10,
+      "authorData": {
+        "avatarUrl": "https://catalog.ngc.nvidia.com/demos/mistral.jpg",
+        "fullname": "NVIDIA",
+        "name": "nvidia",
+        "type": "org"
+      }
+    },
+    {
+      "id": "nvidia/Yi-34B",
+      "pipeline_tag": "text-generation",
+      "available": true,
+      "author": "nvidia",
+      "lastModified": "2023-12-13T15:27:12.000Z",
+      "downloads": 11,
+      "likes": 11,
+      "authorData": {
+        "avatarUrl": "https://catalog.ngc.nvidia.com/demos/yi.jpg",
+        "fullname": "NVIDIA",
+        "name": "nvidia",
+        "type": "org"
+      }
+    },
+    {
+      "id": "nvidia/Nemotron-3-8B-Chat-SteerLM",
+      "pipeline_tag": "text-generation",
+      "available": true,
+      "author": "nvidia",
+      "lastModified": "2023-12-11T15:27:12.000Z",
+      "downloads": 12,
+      "likes": 12,
+      "authorData": {
+        "avatarUrl": "https://catalog.ngc.nvidia.com/demos/steerllm.jpg",
+        "fullname": "NVIDIA",
+        "name": "nvidia",
+        "type": "org"
+      }
+    },
+    {
+      "id": "nvidia/Llama-2-70B",
+      "pipeline_tag": "text-generation",
+      "available": true,
+      "author": "nvidia",
+      "lastModified": "2023-12-8T15:27:12.000Z",
+      "downloads": 13,
+      "likes": 13,
+      "authorData": {
+        "avatarUrl": "https://catalog.ngc.nvidia.com/demos/llama2.jpg",
+        "fullname": "NVIDIA",
+        "name": "nvidia",
+        "type": "org"
+      }
+    },
+    {
+      "id": "nvidia/Llama-2-13B",
+      "pipeline_tag": "text-generation",
+      "available": true,
+      "author": "nvidia",
+      "lastModified": "2023-12-8T15:27:12.000Z",
+      "downloads": 14,
+      "likes": 14,
+      "authorData": {
+        "avatarUrl": "https://catalog.ngc.nvidia.com/demos/llama2.jpg",
+        "fullname": "NVIDIA",
+        "name": "nvidia",
+        "type": "org"
+      }
+    },
+    {
+      "id": "nvidia/Code-Llama-13B",
+      "pipeline_tag": "text-generation",
+      "available": true,
+      "author": "nvidia",
+      "lastModified": "2023-12-8T15:27:12.000Z",
+      "downloads": 15,
+      "likes": 15,
+      "authorData": {
+        "avatarUrl": "https://catalog.ngc.nvidia.com/demos/llama2.jpg",
+        "fullname": "NVIDIA",
+        "name": "nvidia",
+        "type": "org"
+      }
+    },
+    {
+      "id": "nvidia/Code-Llama-34B",
+      "pipeline_tag": "text-generation",
+      "available": true,
+      "author": "nvidia",
+      "lastModified": "2023-12-8T15:27:12.000Z",
+      "downloads": 16,
+      "likes": 16,
+      "authorData": {
+        "avatarUrl": "https://catalog.ngc.nvidia.com/demos/llama2.jpg",
+        "fullname": "NVIDIA",
+        "name": "nvidia",
+        "type": "org"
+      }
+    },
+    {
+      "id": "nvidia/Mistral-7B-Instruct",
+      "pipeline_tag": "text-generation",
+      "available": true,
+      "author": "nvidia",
+      "lastModified": "2023-12-13T15:27:12.000Z",
+      "downloads": 17,
+      "likes": 17,
+      "authorData": {
+        "avatarUrl": "https://catalog.ngc.nvidia.com/demos/mistral.jpg",
+        "fullname": "NVIDIA",
+        "name": "nvidia",
+        "type": "org"
+      }
+    }
+  ],
+  "numItemsPerPage": 30,
+  "numTotalItems": 17,
+  "pageIndex": 1
+}

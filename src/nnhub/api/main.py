@@ -1,5 +1,5 @@
+import json
 import os
-from contextlib import asynccontextmanager
 from enum import Enum
 from typing import Optional
 
@@ -7,7 +7,6 @@ import aiofiles
 import aiohttp
 import aioredis
 import huggingface_hub
-import torch.backends.mps
 from fastapi import FastAPI, APIRouter, Depends, HTTPException, BackgroundTasks
 from fastapi.concurrency import run_in_threadpool
 from huggingface_hub import HfFileSystem, snapshot_download
@@ -17,22 +16,11 @@ from starlette.responses import RedirectResponse, StreamingResponse
 
 from nnhub.api.image_classification_model.router import router as image_classification_router
 from nnhub.api.image_segmentation_model.router import router as image_segmentation_router
-from nnhub.api.large_language_model.router import router as large_language_model_router
 from nnhub.api.speech_to_text_model.router import router as speech_to_text_model_router
-from nnhub.infrastructure.db import init_db, create_db
 from nnhub.infrastructure.model_settings import model_settings
 from nnhub.infrastructure.redis import get_redis
 
 fs = HfFileSystem()
-
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    db = await create_db()
-    await init_db(db)
-    await db.close()
-    yield
 
 
 app = FastAPI(
@@ -40,7 +28,6 @@ app = FastAPI(
     summary='summary',
     description='description',
     version='0.0.1',
-    lifespan=lifespan,
 )
 
 app.add_middleware(
@@ -121,6 +108,10 @@ class AvailableModelsRequest(BaseModel):
 async def get_available_models(
     request: AvailableModelsRequest = Depends()
 ):
+    if request.pipeline == PipelineTag.text_generation:
+        async with aiofiles.open('/opt/app-root/data/models.json', mode='r') as file:
+            return json.loads(await file.read())
+
     params = {
         'library': 'transformers',
         'sort': request.sort.value,
@@ -148,32 +139,12 @@ async def get_available_models(
                 return response
 
 
-@router_v1.get("/is_mps_available")
-async def is_mps_available():
-    return torch.backends.mps.is_available()
 
 
 async def read_file_async(file_path: str):
     async with aiofiles.open(file_path, mode='r') as file:
         return await file.read()
 
-
-# @router_v1.get("/model_card/{org_id}/{repo_id}")
-# async def get_model_card(org_id: str, repo_id: str):
-#     exist = huggingface_hub.file_exists(f'{org_id}/{repo_id}', filename='README.md')
-#
-#     if not exist:
-#         raise HTTPException(status_code=404, detail="README.md not found")
-#
-#     readme_location = huggingface_hub.hf_hub_download(f'{org_id}/{repo_id}', filename='README.md')
-#
-#     async def file_generator():
-#         async with aiofiles.open(readme_location, mode='r') as file:
-#             yield await file.read()
-#
-#     # background_tasks.add_task(os.remove, readme_location)
-#
-#     return StreamingResponse(file_generator(), media_type="text/markdown")
 
 @router_v1.get("/model_card/{org_id}/{repo_id}")
 async def get_model_card(org_id: str, repo_id: str, redis: aioredis.Redis = Depends(get_redis)):
@@ -289,6 +260,5 @@ async def model_load_status(org_id: str, repo_id: str, redis: aioredis.Redis = D
 
 router_v1.include_router(image_classification_router)
 router_v1.include_router(image_segmentation_router)
-router_v1.include_router(large_language_model_router)
 router_v1.include_router(speech_to_text_model_router)
 app.include_router(router_v1)

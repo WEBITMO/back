@@ -8,8 +8,6 @@ from pydantic import BaseModel
 from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND, HTTP_200_OK
 from transformers import pipeline, Pipeline
 
-from nnhub.domain.types import ModelType
-from nnhub.infrastructure.db import get_db
 from nnhub.infrastructure.model_settings import model_settings
 from nnhub.infrastructure.redis import get_redis
 
