@@ -21,10 +21,10 @@ from nnhub.api.large_language_model.router import router as large_language_model
 from nnhub.api.speech_to_text_model.router import router as speech_to_text_model_router
 from nnhub.infrastructure.db import init_db, create_db
 from nnhub.infrastructure.model_settings import model_settings
+from nnhub.infrastructure.redis import get_redis
 
 fs = HfFileSystem()
 
-REDIS_URL = os.getenv("REDIS_URL")
 
 
 @asynccontextmanager
@@ -33,15 +33,6 @@ async def lifespan(app: FastAPI):
     await init_db(db)
     await db.close()
     yield
-
-
-async def get_redis() -> aioredis.Redis:
-    redis = await aioredis.create_redis_pool(REDIS_URL)
-    try:
-        yield redis
-    finally:
-        redis.close()
-        await redis.wait_closed()
 
 
 app = FastAPI(
@@ -272,6 +263,28 @@ async def model_download(org_id: str, repo_id: str, background_tasks: Background
     background_tasks.add_task(download_task, org_id, repo_id, download_key, redis)
 
     return "download started"
+
+
+@router_v1.get("/model_download_status/{org_id}/{repo_id}")
+async def model_download_status(org_id: str, repo_id: str, redis: aioredis.Redis = Depends(get_redis)):
+    download_key = f"download:{org_id}:{repo_id}"
+    download_status = await redis.get(download_key)
+
+    if download_status is None:
+        return {"status": "not_started"}
+    else:
+        return {"status": "in_progress"}
+
+
+@router_v1.get("/model_load_status/{org_id}/{repo_id}")
+async def model_load_status(org_id: str, repo_id: str, redis: aioredis.Redis = Depends(get_redis)):
+    load_key = f"load:{org_id}:{repo_id}"
+    load_status = await redis.get(load_key)
+
+    if load_status is None:
+        return {"status": "not_loaded"}
+    else:
+        return {"status": "loaded"}
 
 
 router_v1.include_router(image_classification_router)

@@ -6,7 +6,7 @@ class ServerConfig(BaseSettings):
 
     HOST: str = '0.0.0.0'
     PORT: int = 8888
-    WORKERS_COUNT: int = 4
+    WORKERS_COUNT: int = 1
     AUTO_RELOAD: bool = True
     TIMEOUT: int = 60 * 60 * 24
 

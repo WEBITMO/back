@@ -1,45 +1,59 @@
 import io
 
+import aioredis
+import torch
 from PIL import Image
 from aiosqlite import Connection
 from fastapi import APIRouter, Depends, UploadFile, File, HTTPException
-from pydantic import BaseModel, RootModel
-from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND
+from pydantic import BaseModel
+from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND, HTTP_200_OK
 from transformers import pipeline, Pipeline
 
-from nnhub.api.schema.model import Model
-from nnhub.domain.model import get_available_local_models
-from nnhub.domain.types import ModelType
-from nnhub.infrastructure.db import get_db, update_model_name
+from nnhub.infrastructure.db import get_db
 from nnhub.infrastructure.model_settings import model_settings
+from nnhub.infrastructure.redis import get_redis
 
 router = APIRouter(
-    prefix='/image_segmentation_model',
+    prefix='/object-detection',
     tags=['Image Segmentation Model'],
 )
 
 pipe: Pipeline = None
 
 
-@router.get("/")
-async def get_available_models() -> list[str]:
-    return get_available_local_models(model_settings.IMAGE_SEGMENTATION)
-
-
-@router.post("/load")
+@router.get("/load/{org_id}/{repo_id}")
 async def load_model_locally(
-    model: Model,
-    db: Connection = Depends(get_db),
+    org_id: str,
+    repo_id: str,
+    redis: aioredis.Redis = Depends(get_redis),
 ):
-    global pipe
-    available_models = get_available_local_models(model_settings.IMAGE_SEGMENTATION)
-    if model.name not in available_models:
-        return HTTP_404_NOT_FOUND
-    await update_model_name(db, model_type=ModelType.IMAGE_SEGMENTATION, model_name=model.name)
+    load_key = f"load:{org_id}:{repo_id}"
+    load_status = await redis.get(load_key)
+    if load_status:
+        return HTTP_201_CREATED
 
-    pipe = pipeline("object-detection", model=model_settings.BASE / model_settings.IMAGE_SEGMENTATION / model.name)
+    global pipe
+
+    pipe = pipeline("object-detection", model=model_settings.BASE / org_id / repo_id)
+    await redis.set(load_key, "true")
 
     return HTTP_201_CREATED
+
+
+@router.get("/unload/{org_id}/{repo_id}")
+async def unload_model_locally(
+    org_id: str,
+    repo_id: str,
+    redis: aioredis.Redis = Depends(get_redis),
+):
+    load_key = f"load:{org_id}:{repo_id}"
+    load_status = await redis.get(load_key)
+    if not load_status:
+        return HTTP_404_NOT_FOUND
+    await redis.delete(load_key)
+    global pipe
+    pipe = None
+    return HTTP_200_OK
 
 
 class ImageSegmentationResult(BaseModel):
@@ -60,14 +74,6 @@ async def inference_by_image(
     global pipe
     if not image.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="Invalid image: type")
-
-    current_model = await db.execute("SELECT name FROM model WHERE type = ?",
-                                     (ModelType.IMAGE_SEGMENTATION.value,))
-    current_model = await current_model.fetchone()
-
-    if current_model is None:
-        raise HTTPException(status_code=404, detail="Model not found")
-    current_model = current_model[0]
 
     content = await image.read()
 
